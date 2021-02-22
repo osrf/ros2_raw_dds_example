@@ -1,13 +1,8 @@
 #include <chrono>
 #include <csignal>
-#include <cstdio>
-#include <cstring>
-#include <memory>
 #include <thread>
 
 #include <unistd.h>
-
-#include <fastcdr/Cdr.h>
 
 #include "UUIDSubscriber.hpp"
 
