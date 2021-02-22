@@ -103,3 +103,59 @@ $ ./ros2_fastrtps_recv
 ```
 
 You should see the data being published from Terminal 1 into Terminal 2.
+
+## How was this example generated?
+
+This particular example uses the `unique_identifer_msgs/msg/UUID`, but the idea can be extended to any ROS 2 message.
+To understand how, we need to briefly discuss how ROS 2 generates code from `.msg` files.
+
+### How ROS 2 generates code from `.msg` files
+
+At a very high-level, ROS 2 takes the data from `.msg` files and produces `.idl` files from those messages.
+It then takes the `.idl` files and generates code specific to that particular message for that particular DDS implementation.
+When ROS 2 is installed, it installs both the `.msg` and the generated `.idl` files into the installation directory.
+
+### Generating code from `.idl` files
+
+With the knowledge from the previous section we can look at generating Fast-DDS code for any ROS 2 message.
+Because we are trying to not use any ROS 2 in this example directly, we need one more tool that will generate the code for us.
+That tool is called [Fast-DDS-Gen](https://github.com/eProsima/Fast-DDS-Gen), and will convert our `.idl` files into code that we can use.
+
+#### Building Fast-DDS-Gen
+
+1. `$ git clone https://github.com/eProsima/Fast-DDS-Gen`
+1. `$ pushd Fast-DDS-Gen`
+1. `$ ./gradlew assemble`
+1. `$ popd`
+
+#### Generating code from `.idl` files
+
+Now that we have Fast-DDS-Gen installed, we can use it to recreate the UUID code we have checked in to this repository.
+
+Assuming you have ROS 2 Rolling installed, we can run the following:
+
+```
+$ mkdir output ; ./Fast-DDS-Gen/scripts/fastddsgen -example CMake -d output -typeros2 /opt/ros/rolling/share/unique_identifier_msgs/msg/UUID.idl
+```
+
+Fast-DDS-Gen generated a bunch of files in the `output` subdirectory.
+We'll go through each one, describe what it is used for, and describe the changes needed to make it ROS 2 compliant.
+
+* `CMakeLists.txt` - Not used, ignore this file.
+* `UUID.cxx` - The class implementation of the message in the IDL file.  No changes needed to make it ROS 2 compliant.
+* `UUID.h` - The class definition of the message in the IDL file.  No changes needed to make it ROS 2 compliant.
+* `UUIDPublisher.cxx` - The class implementation of a publisher for the message in the IDL file.  To make it ROS 2 compliant, the topic name for the `create_topic` call must be prefixed with the string `rt/` (for ROS Topic).
+* `UUIDPublisher.h` - The class definition of a publisher for the message in the IDL file.  No changes needed to make it ROS 2 compliant.
+* `UUIDPubSubMain.cxx` - Not used, ignore this file.
+* `UUIDPubSubTypes.cxx` - The class implementation of the serialization/deserialization code for the message in the IDL file.  To make it ROS 2 compliant, the type name as set by `setName` must be set to `<namespace>::msg::dds_::<Type>_`.  For instance, for the UUID IDL file, the typename must be set to `unique_identifier_msgs::msg::dds_::UUID_`.
+* `UUIDPubSubTypes.h` - The class definition of the serialization/deserialization code for the message in the IDL file.  No changes needed to make it ROS 2 compliant.
+* `UUIDSubscriber.cxx` - The class implementation of a subscriber for the message in the IDL file.  To make it ROS 2 compliant, the topic name for the `create_topic` call must be prefixed with the string `rt/` (for ROS Topic).
+* `UUIDSubscriber.h` - The class definition of a subscriber for the mssage in the IDL file.  No changes need to make it ROS 2 compliant.
+
+## Making Fast-DDS interoperate with ROS 2
+
+With all of the above explanation in mind, the following are what is needed to allow a raw Fast-DDS participant to communicate with a ROS 2 network:
+
+1. The QoS of the publisher and subscriber have to match.  This is true for *all* participants in the network that wish to communicate.
+1. The topic that the raw DDS participant uses must begin with `rt/`.
+1. The type that the raw DDS participant uses must be of the form `<namespace>::msg::dds_::<Type>_`.
