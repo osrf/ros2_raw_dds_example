@@ -16,7 +16,7 @@ target_link_libraries(ros2_fastrtps_recv
 )
 
 add_executable(ros2_fastrtps_send
-  src/ros2_fastrtps_pub.cpp
+  src/ros2_fastrtps_send.cpp
   src/UUID.cpp
   src/UUIDPubSubTypes.cpp
   src/UUIDPublisher.cpp
