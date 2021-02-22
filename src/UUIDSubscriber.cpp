@@ -25,7 +25,6 @@
 #include <fastdds/dds/subscriber/Subscriber.hpp>
 #include <fastdds/dds/subscriber/qos/DataReaderQos.hpp>
 
-#include "UUID.hpp"
 #include "UUIDSubscriber.hpp"
 #include "UUIDPubSubTypes.hpp"
 
@@ -125,16 +124,16 @@ void UUIDSubscriber::SubListener::on_data_available(
         DataReader* reader)
 {
     // Take data
+    unique_identifier_msgs::msg::UUID st;
     SampleInfo info;
 
-    if (reader->take_next_sample(&msg, &info) == ReturnCode_t::RETCODE_OK)
+    if (reader->take_next_sample(&st, &info) == ReturnCode_t::RETCODE_OK)
     {
         if (info.valid_data)
         {
             // Print your structure data here.
             ++samples;
             std::cout << "Sample received, count=" << samples << std::endl;
-            has_msg = true;
         }
     }
 }
@@ -144,15 +143,4 @@ void UUIDSubscriber::run()
     std::cout << "Waiting for Data, press Enter to stop the DataReader. " << std::endl;
     std::cin.ignore();
     std::cout << "Shutting down the Subscriber." << std::endl;
-}
-
-bool UUIDSubscriber::hasMsg()
-{
-    return listener_.has_msg;
-}
-
-unique_identifier_msgs::msg::UUID UUIDSubscriber::getMsg()
-{
-    listener_.has_msg = false;
-    return listener_.msg;
 }

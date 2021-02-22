@@ -28,8 +28,6 @@
 #include <fastdds/dds/subscriber/DataReaderListener.hpp>
 #include <fastdds/dds/subscriber/Subscriber.hpp>
 
-#include "UUID.hpp"
-
 class UUIDSubscriber
 {
 public:
@@ -41,10 +39,6 @@ public:
     bool init();
 
     void run();
-
-    bool hasMsg();
-
-    unique_identifier_msgs::msg::UUID getMsg();
 
 private:
 
@@ -71,9 +65,7 @@ private:
 
         int matched = 0;
         uint32_t samples = 0;
-        unique_identifier_msgs::msg::UUID msg;
-        bool has_msg = false;
-     }
+    }
     listener_;
 };
 
