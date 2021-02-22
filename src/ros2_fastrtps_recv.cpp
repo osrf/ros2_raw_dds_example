@@ -7,7 +7,9 @@
 
 #include <unistd.h>
 
-#include "RtpsTopics.hpp"
+#include <fastcdr/Cdr.h>
+
+#include "UUIDSubscriber.hpp"
 
 constexpr int BUFFER_SIZE = 1024;
 
@@ -26,24 +28,22 @@ int main(int argc, char *argv[])
 
     ::signal(SIGINT, signal_handler);
 
-    RtpsTopics topics;
+    UUIDSubscriber uuid_sub;
 
-    topics.init();
+    uuid_sub.init();
 
     while (running)
     {
-        uint8_t topic_ID = 255;
-        while (topics.hasMsg(&topic_ID))
+        while (uuid_sub.hasMsg())
         {
             char data_buffer[BUFFER_SIZE] = {};
             /* make room for the header to fill in later */
             eprosima::fastcdr::FastBuffer cdrbuffer(&data_buffer[0], sizeof(data_buffer));
             eprosima::fastcdr::Cdr scdr(cdrbuffer);
-            if (topics.getMsg(topic_ID, scdr))
-            {
-                int length = scdr.getSerializedDataLength();
-                fprintf(stderr, "Got a message of length %d from topic %d\n", length, topic_ID);
-            }
+            unique_identifier_msgs::msg::UUID msg = uuid_sub.getMsg();
+            msg.serialize(scdr);
+            int length = scdr.getSerializedDataLength();
+            fprintf(stderr, "Got a message of length %d\n", length);
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
