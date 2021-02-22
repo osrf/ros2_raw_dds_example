@@ -29,7 +29,7 @@
 #include <fastdds/dds/publisher/Publisher.hpp>
 #include <fastdds/dds/topic/TypeSupport.hpp>
 
-#include "UUID.hpp"
+#include "UUID.h"
 
 class UUIDPublisher
 {

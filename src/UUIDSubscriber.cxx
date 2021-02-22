@@ -25,8 +25,8 @@
 #include <fastdds/dds/subscriber/Subscriber.hpp>
 #include <fastdds/dds/subscriber/qos/DataReaderQos.hpp>
 
-#include "UUIDSubscriber.hpp"
-#include "UUIDPubSubTypes.hpp"
+#include "UUIDSubscriber.h"
+#include "UUIDPubSubTypes.h"
 
 using namespace eprosima::fastdds::dds;
 

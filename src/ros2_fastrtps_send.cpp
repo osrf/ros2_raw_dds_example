@@ -5,8 +5,8 @@
 
 #include <unistd.h>
 
-#include "UUID.hpp"
-#include "UUIDPublisher.hpp"
+#include "UUID.h"
+#include "UUIDPublisher.h"
 
 volatile sig_atomic_t running = 1;
 

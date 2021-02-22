@@ -26,7 +26,7 @@
 #include <fastdds/dds/topic/TopicDataType.hpp>
 #include <fastrtps/utils/md5.h>
 
-#include "UUID.hpp"
+#include "UUID.h"
 
 #if !defined(GEN_API_VER) || (GEN_API_VER != 1)
 #error Generated UUID is not compatible with current installed Fast DDS. Please, regenerate it with fastddsgen.

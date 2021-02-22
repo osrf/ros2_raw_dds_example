@@ -4,7 +4,7 @@
 
 #include <unistd.h>
 
-#include "UUIDSubscriber.hpp"
+#include "UUIDSubscriber.h"
 
 constexpr int BUFFER_SIZE = 1024;
 

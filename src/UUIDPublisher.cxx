@@ -20,8 +20,8 @@
  */
 
 
-#include "UUIDPublisher.hpp"
-#include "UUIDPubSubTypes.hpp"
+#include "UUIDPublisher.h"
+#include "UUIDPubSubTypes.h"
 
 #include <fastdds/dds/domain/DomainParticipantFactory.hpp>
 #include <fastdds/dds/publisher/Publisher.hpp>
