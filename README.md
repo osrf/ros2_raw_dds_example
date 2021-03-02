@@ -2,13 +2,13 @@
 
 This repository contains an example of having a "raw" DDS node communicate with a ROS 2 network.
 In this case "raw" means that it is a program that does not use any of the ROS 2 libraries, but instead uses a DDS implementation directly.
-In this particular case, the DDS implementation used is [Fast-DDS](https://github.com/eProsima/Fast-DDS/).
+This repository has examples using [Fast-DDS](https://github.com/eProsima/Fast-DDS/) and [CycloneDDS](https://github.com/eclipse-cyclonedds/cyclonedds).
 
 ## Building from source
 
 ### Install ROS 2 Rolling
 
-Follow the instructions at https://docs.ros.org/en/rolling/Installation.html
+Follow the instructions at https://docs.ros.org/en/rolling/Installation.html.
 
 ### Build the prerequisites
 
@@ -47,26 +47,30 @@ Follow the instructions at https://docs.ros.org/en/rolling/Installation.html
 
 ## Running
 
-Among the binaries built in this repository are `ros2_fastrtps_send` and `ros2_fastrtps_recv`.
+This repository builds 4 binaries: `ros2_fastdds_send`, `ros2_fastdds_recv`, `ros2_cyclonedds_send`, and `ros2_cyclonedds_recv`.
 
-`ros2_fastrtps_send` uses Fast-DDS to publish a ROS 2 [UUID message](https://github.com/ros2/unique_identifier_msgs/blob/80c21658a1b17f0c4e24002552f2426db236985f/msg/UUID.msg) on the `/uuid_topic` once a second, incrementing the first number every publication.
+`ros2_fastdds_send` uses Fast-DDS to publish a ROS 2 [UUID message](https://github.com/ros2/unique_identifier_msgs/blob/80c21658a1b17f0c4e24002552f2426db236985f/msg/UUID.msg) on the `/uuid_topic` once a second, incrementing the first number of the UUID every publication.
 
-`ros2_fastrtps_recv` uses Fast-DDS to listen to the `/uuid_topic`, and print every time it gets a new UUID message.
+`ros2_cyclonedds_send` uses CycloneDDS to do the same.
 
-### Demo 1 - Publisher from raw DDS into ROS 2 network
+`ros2_fastdds_recv` uses Fast-DDS to listen to the `/uuid_topic`, and print every time it gets a new UUID message.
+
+`ros2_cyclonedds_recv` uses CycloneDDS to do the same.
+
+### Demo 1 - Publish raw DDS using Fast-DDS into ROS 2 network
 
 This demo requires 3 terminals.
 
 #### Terminal 1
 
 ```
-$ ./ros2_fastrtps_send
+$ ./ros2_fastdds_send
 ```
 
 #### Terminal 2
 
 ```
-$ ./ros2_fastrtps_recv
+$ ./ros2_fastdds_recv
 ```
 
 #### Terminal 3
@@ -79,7 +83,7 @@ $ RMW_IMPLEMENTATION=rmw_fastrtps_cpp ros2 topic echo /uuid_topic unique_identif
 
 You should see the data being published from Terminal 1 into both Terminal 2 and Terminal 3.
 
-### Demo 2 - Publisher from ROS 2 network into raw DDS
+### Demo 2 - Publish from ROS 2 network into raw DDS using Fast-DDS
 
 This demo requires 2 terminals.
 
@@ -109,7 +113,68 @@ $ RMW_IMPLEMENTATION=rmw_fastrtps_cpp ros2 topic pub /uuid_topic unique_identifi
 #### Terminal 2
 
 ```
-$ ./ros2_fastrtps_recv
+$ ./ros2_fastdds_recv
+```
+
+You should see the data being published from Terminal 1 into Terminal 2.
+
+### Demo 3 - Publish raw DDS using CycloneDDS into ROS 2 network
+
+This demo requires 3 terminals.
+
+#### Terminal 1
+
+```
+$ ./ros2_cyclonedds_send
+```
+
+#### Terminal 2
+
+```
+$ ./ros2_cyclonedds_recv
+```
+
+#### Terminal 3
+
+```
+$ . /opt/ros/rolling/setup.bash
+$ RMW_IMPLEMENTATION=rmw_cyclonedds_cpp ros2 topic list -t
+$ RMW_IMPLEMENTATION=rmw_cyclonedds_cpp ros2 topic echo /uuid_topic unique_identifier_msgs/msg/UUID
+```
+
+You should see the data being published from Terminal 1 into both Terminal 2 and Terminal 3.
+
+### Demo 4 - Publish from ROS 2 network into raw DDS using CycloneDDS
+
+This demo requires 2 terminals.
+
+#### Terminal 1
+
+```
+$ . /opt/ros/rolling/setup.bash
+$ RMW_IMPLEMENTATION=rmw_cyclonedds_cpp ros2 topic pub /uuid_topic unique_identifier_msgs/msg/UUID "uuid:
+- 0
+- 0
+- 0
+- 0
+- 0
+- 0
+- 0
+- 0
+- 0
+- 0
+- 0
+- 0
+- 0
+- 0
+- 0
+- 0"
+```
+
+#### Terminal 2
+
+```
+$ ./ros2_cyclonedds_recv
 ```
 
 You should see the data being published from Terminal 1 into Terminal 2.

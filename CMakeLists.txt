@@ -6,23 +6,23 @@ find_package(CycloneDDS REQUIRED)
 find_package(fastcdr REQUIRED)
 find_package(fastrtps REQUIRED)
 
-add_executable(ros2_fastrtps_recv
-  src/ros2_fastrtps_recv.cpp
+add_executable(ros2_fastdds_recv
+  src/ros2_fastdds_recv.cpp
   src/UUID.cxx
   src/UUIDPubSubTypes.cxx
   src/UUIDSubscriber.cxx
 )
-target_link_libraries(ros2_fastrtps_recv
+target_link_libraries(ros2_fastdds_recv
   fastrtps
 )
 
-add_executable(ros2_fastrtps_send
-  src/ros2_fastrtps_send.cpp
+add_executable(ros2_fastdds_send
+  src/ros2_fastdds_send.cpp
   src/UUID.cxx
   src/UUIDPubSubTypes.cxx
   src/UUIDPublisher.cxx
 )
-target_link_libraries(ros2_fastrtps_send
+target_link_libraries(ros2_fastdds_send
   fastrtps
 )
 
