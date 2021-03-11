@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
     }
 
     /* Deleting the participant will delete all its children recursively as well. */
-    rc = dds_delete (participant);
+    rc = dds_delete(participant);
     if (rc != DDS_RETCODE_OK)
     {
         DDS_FATAL("dds_delete: %s\n", dds_strretcode(-rc));

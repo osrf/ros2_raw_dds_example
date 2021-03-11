@@ -99,7 +99,7 @@ int main (int argc, char ** argv)
     dds_sample_free(samples[0], &UUID_desc, DDS_FREE_ALL);
 
     /* Deleting the participant will delete all its children recursively as well. */
-    rc = dds_delete (participant);
+    rc = dds_delete(participant);
     if (rc != DDS_RETCODE_OK)
     {
         DDS_FATAL("dds_delete: %s\n", dds_strretcode(-rc));
