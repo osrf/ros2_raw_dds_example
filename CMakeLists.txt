@@ -2,9 +2,12 @@ cmake_minimum_required(VERSION 3.5)
 
 project(ros2_raw_dds_example)
 
+list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
+
 find_package(CycloneDDS REQUIRED)
 find_package(fastcdr REQUIRED)
 find_package(fastrtps REQUIRED)
+find_package(Connext QUIET MODULE)
 
 add_executable(ros2_fastdds_recv
   src/fastdds/ros2_fastdds_recv.cpp
@@ -39,3 +42,25 @@ add_executable(ros2_cyclonedds_recv
 target_link_libraries(ros2_cyclonedds_recv
   CycloneDDS::ddsc
 )
+
+if(Connext_FOUND)
+  add_executable(ros2_connextdds_send
+    src/connextdds/ros2_connextdds_send.cpp
+    src/connextdds/UUID.cxx
+    src/connextdds/UUIDSupport.cxx
+    src/connextdds/UUIDPlugin.cxx
+  )
+  target_include_directories(ros2_connextdds_send PRIVATE ${Connext_INCLUDE_DIRS})
+  target_compile_definitions(ros2_connextdds_send PRIVATE ${Connext_DEFINITIONS})
+  target_link_libraries(ros2_connextdds_send PRIVATE ${Connext_LIBRARIES})
+
+  add_executable(ros2_connextdds_recv
+    src/connextdds/ros2_connextdds_recv.cpp
+    src/connextdds/UUID.cxx
+    src/connextdds/UUIDSupport.cxx
+    src/connextdds/UUIDPlugin.cxx
+  )
+  target_include_directories(ros2_connextdds_recv PRIVATE ${Connext_INCLUDE_DIRS})
+  target_compile_definitions(ros2_connextdds_recv PRIVATE ${Connext_DEFINITIONS})
+  target_link_libraries(ros2_connextdds_recv PRIVATE ${Connext_LIBRARIES})
+endif()
